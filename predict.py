@@ -451,7 +451,7 @@ def show_predict_page():
 	chldcnt = st.radio("How many children do you have in your household?", chldcnts)
 	new_entry.iloc[0]._CHLDCNT = chldcnts.index(chldcnt) + 1
 	
-	new_entry.iloc[0]._DRNKWK1 = st.slider("How many alcholic drinks do you haver per week in total?", 0, 200)
+	new_entry.iloc[0]._DRNKWK1 = st.slider("How many alcholic drinks do you haver per week in total?", 0, 100)
 	
 	new_entry.iloc[0].SLEPTIM1 = st.slider("How many hours of sleep do you get in a 24-hour period?", 0, 24)
 	
