@@ -19,7 +19,7 @@ st.markdown(hide_menu_style, unsafe_allow_html=True)
 st.image('./res/stroke.gif')
 
 df_name = "stroke_cleaned.h5"
-model_name = "strokemodel1.joblib"
+model_name = "stroke_model_RUS.joblib"
 
 
 states = (
