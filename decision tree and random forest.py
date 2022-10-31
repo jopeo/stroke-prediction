@@ -28,8 +28,7 @@ from joblib import dump, load
 #  todo: visit https://www.cdc.gov/brfss/annual_data/annual_2020.html to download the data,
 #   the SAS Transport Format is used here:
 
-# filename = "heart_2020_cleaned.csv"
-full_file = "LLCP2020.XPT"
+raw_file = "raw.h5"
 df_name = "df.h5"
 model_name = "model11.joblib"
 
@@ -210,7 +209,8 @@ def process(prediction_data):
 
 
 if __name__ ==  "__main__":
-	data_o, data = load_data(full_file)
+	X = pd.read_hdf("./source/" + df_name)  # to read cleaned data
+	data_o, data = load_data(raw_file)
 	data = clean_data(data)
 	
 	data.shape
