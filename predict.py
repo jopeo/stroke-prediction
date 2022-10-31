@@ -18,8 +18,8 @@ st.markdown(hide_menu_style, unsafe_allow_html=True)
 
 st.image('./res/stroke.gif')
 
-df_name = "df.h5"
-# model_name = "model11.joblib"
+df_name = "stroke_cleaned.h5"
+model_name = "strokemodel1.joblib"
 
 
 states = (
@@ -212,6 +212,9 @@ chldcnts = ("No children",
             "Four children in household",
             "Five or more children in household")
 
+michds = ("Yes",
+          "No")
+
 features_cat = ['_STATE',       # geographical state]
                 'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE
                 '_RFHLTH',      # Health Status  1 Good or Better Health 2 Fair or Poor Health
@@ -385,6 +388,9 @@ def show_predict_page():
 	
 	pneumo3 = st.radio("Have you ever has a pneumonia vaccination?", pneumo3s)
 	new_entry.iloc[0]._PNEUMO3 = pneumo3s.index(pneumo3) + 1
+
+	michd = st.radio("Have you ever had coronary heart disease (CHD) or myocardial infarction (MI)?", michds)
+	new_entry.iloc[0]._MICHD = michds.index(michd) + 1
 	
 	rfseat3 = st.radio("How often do you wear a seatbelt when in a vehicle?", rfseat3s)
 	new_entry.iloc[0]._RFSEAT3 = 1 if rfseat3s.index(rfseat3) < 1 else 2
@@ -457,14 +463,14 @@ def show_predict_page():
 		# to_predict = process(new_entry, X)
 		# input_shape = [to_predict.shape[1]]
 		
-		# model = load(model_name)
+		model = load(model_name)
 		
-		# y_new = model.predict_proba(new_entry)
+		y_new = model.predict_proba(new_entry)
 		
 		# st.write(f"Your calculated probability of heart disease is: {100*clicked:.2f}% \n")
 		# st.subheader(f"Your calculated probability of heart disease is: {y_new}% \n {type(y_new)}")
-		st.subheader(f"Your calculated probability of heart disease is:")
-		# st.header(f" {100*y_new[0][1]:.2f}%")
+		st.subheader(f"Your calculated probability of stroke is:")
+		st.header(f" {100*y_new[0][1]:.2f}%")
 		# st.header(f" {100*float(y_new[[0]]):.2f}% \n")
 		clicked = False
 		

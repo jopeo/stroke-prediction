@@ -29,9 +29,10 @@ from joblib import dump, load
 #   the SAS Transport Format is used here:
 
 raw_file = "raw.h5"
-df_name = "df.h5"
-model_name = "model11.joblib"
+cleaned_file = "stroke_cleaned.h5"
+model_name = "strokemodel1.joblib"
 
+outcome = "CVDSTRK3"    # (Ever told) (you had) a stroke.
 
 features_cat = ['_STATE',       # geographical state]
                 'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE
@@ -74,7 +75,8 @@ features_cat = ['_STATE',       # geographical state]
                 'ADDEPEV3',     # (Ever told) (you had) a depressive disorder (including depression, major depression, dysthymia, or minor depression)? 1 yes 2 no
                 'CHCKDNY2',     # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
                 'DIABETE4',     # (Ever told) (you had) diabetes? 1 yes 2 no
-                'MARITAL'      #  (marital status) 1 married 2 divorced 3 widowed 4 separated 5 never married 6 member of unmarried couple
+                'MARITAL',      #  (marital status) 1 married 2 divorced 3 widowed 4 separated 5 never married 6 member of unmarried couple
+                '_MICHD'        # ever reported having coronary heart disease (CHD) or myocardial infarction (MI) 1 yes 2 no
                 ]
 
 features_num = ['_AGE80',       #  imputed age value collapsed above 80
@@ -150,6 +152,8 @@ def clean_data(data):
 	data.DIABETE4 = data.DIABETE4.replace(7, int(data.DIABETE4.mode()))
 	data.DIABETE4 = data.DIABETE4.replace(9, int(data.DIABETE4.mode()))
 	data.MARITAL = data.MARITAL.replace(9, int(data.MARITAL.mode()))
+	data.CVDSTRK3 = data.CVDSTRK3.replace(9, int(data.CVDSTRK3.mode()))
+	data.CVDSTRK3 = data.CVDSTRK3.replace(7, int(data.CVDSTRK3.mode()))
 	data = data[data.QSTLANG < 3]  # responded english or spanish to language (only 1 respondent said other)
 	return data
 
@@ -209,22 +213,31 @@ def process(prediction_data):
 
 
 if __name__ ==  "__main__":
-	X = pd.read_hdf("./source/" + df_name)  # to read cleaned data
-	data_o, data = load_data(raw_file)
-	data = clean_data(data)
-	
+	data = pd.read_hdf(raw_file)  # to read cleaned data
 	data.shape
+
+	data = clean_data(data)
+	data.shape
+	
+	# data.CVDSTRK3.unique()
+	# data._MICHD.describe()
+	# cols = data.columns
+	# print(cols)
 	# data.describe()
 	# data.head()
 	# data.columns
 	
-	X = data.drop([i for i in data.columns if i in data.columns and i not in features_cat and i not in features_num and i not in ['_MICHD']], axis=1)
+	X = data.drop([i for i in data.columns if i in data.columns and i not in features_cat and i not in features_num and i not in [outcome]], axis=1)
 	X.shape
 	
-	y = abs(data._MICHD - 2)
+	y = abs(data.CVDSTRK3 - 2)
 	y.head()
-	y.describe()
-	X = X.drop(['_MICHD'], axis=1)
+	# y.describe()
+	# y.shape
+	# len([i for i in y if i == 1])
+	# y.value_counts(1)
+	X = X.drop([outcome], axis=1)
+	
 	
 	X.shape
 	X.head()
@@ -237,9 +250,11 @@ if __name__ ==  "__main__":
 	X.shape
 	X.head()
 	X.isnull().values.any()
+	X
 	
-	# X.to_hdf(df_name, "X")  # to save cleaned data
-	X = pd.read_hdf("./source/" + df_name)  # to read cleaned data
+	
+	X.to_hdf(cleaned_file, "X", complevel=2)  # to save cleaned data
+	# X = pd.read_hdf(cleaned_file)  # to read cleaned data
 	X.shape
 	
 	train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
@@ -257,10 +272,10 @@ if __name__ ==  "__main__":
 	# [val_X_preprocessed.shape[1]]
 	# input_shape
 	
-	X_preprocessed = preprocess(X)
-	X_preprocessed.shape
-	input_shape = [X_preprocessed.shape[1]]
-	input_shape
+	# X_preprocessed = preprocess(X)
+	# X_preprocessed.shape
+	# input_shape = [X_preprocessed.shape[1]]
+	# input_shape
 	
 	# first, a decicision tree model
 	# model = DecisionTreeRegressor(random_state=1)
@@ -283,11 +298,11 @@ if __name__ ==  "__main__":
 	# best_tree_size
 	
 	# now, a random forest model
-	forest_model = RandomForestClassifier(random_state=1, n_estimators=45)
+	forest_model = RandomForestClassifier(random_state=1, n_estimators=46)
 	forest_model.fit(X, y)
 	
-	dump(forest_model, "./source/" + model_name, compress=3)
-	loaded_model = load("./source/" + model_name)
+	dump(forest_model, model_name, compress=3)
+	# loaded_model = load(model_name)
 	
 	predictions = forest_model.predict_proba(val_X_preprocessed)
 	predictions
