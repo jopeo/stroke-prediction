@@ -5,10 +5,8 @@ from pandas import DataFrame, concat, read_hdf
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from joblib import load
 
-st.set_page_config(page_title="Heart Disease Prediction",
-                   page_icon="""
-                   <img src="https://www.pngkey.com/png/detail/2-21571_brain-png-image-background-transparent-background-brain-png.png" alt="Brain Png Image Background - Transparent Background Brain Png@pngkey.com">
-                   """)
+st.set_page_config(page_title="Stroke Prediction",
+                   page_icon="./res/brain.png")
 
 hide_menu_style = """
         <style>
@@ -18,13 +16,10 @@ hide_menu_style = """
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.write("""
-<div style='position:relative; padding-bottom:calc(56.25% + 44px)'><iframe src='https://gfycat.com/ifr/VeneratedGrandioseGoa' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div><p> <a href="https://gfycat.com/veneratedgrandiosegoa-bacsinoitru-tia">via Gfycat</a></p>""")
-
-# st.image('./res/heart_section.gif')
+st.image('./res/stroke.gif')
 
 df_name = "df.h5"
-model_name = "model11.joblib"
+# model_name = "model11.joblib"
 
 
 states = (
@@ -309,8 +304,8 @@ def show_predict_page():
 	X = read_hdf(df_name)
 	new_entry = DataFrame(0, index=range(1), columns=X.columns)
 	
-	st.title("Heart Disease Prediction")
-	st.subheader("A machine learning algorithm for predicting heart disease")
+	st.title("Stroke Prediction")
+	st.subheader("A machine learning algorithm for predicting stroke")
 	
 	state = st.selectbox("In which state do you reside?", states)
 	# todo: check state entries compared with model numbers
@@ -455,21 +450,21 @@ def show_predict_page():
 	new_entry.iloc[0].SLEPTIM1 = st.slider("How many hours of sleep do you get in a 24-hour period?", 0, 24)
 	
 	
-	clicked = st.button("Calculate Probability of Heart Disease")
+	clicked = st.button("Calculate Probability of Stroke")
 	
 	if clicked:
 		# calculate and show
 		# to_predict = process(new_entry, X)
 		# input_shape = [to_predict.shape[1]]
 		
-		model = load(model_name)
+		# model = load(model_name)
 		
-		y_new = model.predict_proba(new_entry)
+		# y_new = model.predict_proba(new_entry)
 		
 		# st.write(f"Your calculated probability of heart disease is: {100*clicked:.2f}% \n")
 		# st.subheader(f"Your calculated probability of heart disease is: {y_new}% \n {type(y_new)}")
 		st.subheader(f"Your calculated probability of heart disease is:")
-		st.header(f" {100*y_new[0][1]:.2f}%")
+		# st.header(f" {100*y_new[0][1]:.2f}%")
 		# st.header(f" {100*float(y_new[[0]]):.2f}% \n")
 		clicked = False
 		
