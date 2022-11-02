@@ -359,6 +359,7 @@ def show_predict_page():
 	new_entry.iloc[0]._AGE80 = 80 if age > 80 else age
 	
 	sex = st.radio("What is your biological sex?", sexes)
+	st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 	new_entry.iloc[0].SEXVAR = sexes.index(sex) + 1
 	
 	race = st.radio("With which race(s) do you identify?", races)
