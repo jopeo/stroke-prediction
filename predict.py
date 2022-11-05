@@ -10,6 +10,14 @@ clicked_url = "https://google.com/maps/search/vascular+surgeon+near+me"
 st.set_page_config(page_title="Stroke Prediction",
                    page_icon="./res/brain.png")
 
+st.markdown(f"""
+<head>
+<link rel="icon" href="./res/brain.png" />
+<link rel="apple-touch-icon" href="./res/brain.png" />
+</head>
+""",
+unsafe_allow_html=True)
+
 hide_menu_style = """
         <style>
         #MainMenu {visibility: hidden;}
