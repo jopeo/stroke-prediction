@@ -5,6 +5,8 @@ from pandas import DataFrame, concat, read_hdf
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from joblib import load
 
+clicked_url = "https://google.com/maps/search/vascular+surgeon+near+me"
+
 st.set_page_config(page_title="Stroke Prediction",
                    page_icon="./res/brain.png")
 
@@ -531,12 +533,17 @@ def show_predict_page():
 		model = load(model_name)
 		
 		y_new = model.predict_proba(new_entry)
+		pct = 100*y_new[0][1]
 		
-		# st.write(f"Your calculated probability of heart disease is: {100*clicked:.2f}% \n")
-		# st.subheader(f"Your calculated probability of heart disease is: {y_new}% \n {type(y_new)}")
 		st.subheader(f"Your calculated probability of stroke is:")
-		st.header(f" {100*y_new[0][1]:.2f}%")
-		# st.header(f" {100*float(y_new[[0]]):.2f}% \n")
+		st.header(f" {pct:.2f}%")
+
+		if pct > 30:
+			st.markdown(f"""
+<a href={clicked_url}><button style="background-color:GreenYellow;">Find a vascular doctor near you!</button></a>
+""",
+unsafe_allow_html=True)
+
 		clicked = False
 	
 	
