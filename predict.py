@@ -360,8 +360,8 @@ def show_predict_page():
 	
 	st.title("Stroke Prediction")
 	st.subheader("A machine learning algorithm for predicting stroke")
-	st.markdown(f"DISCLAIMER: This prototype is for educational purposes only and should not be used for health care "
-				f"decision making. To get a true assessment of your risk of stroke, visit a [vascular doctor near you]({clicked_url}).")
+	st.markdown(f"DISCLAIMER: This prototype is for educational purposes only and should not be used to make health care "
+				f"decisions. To get a true assessment of your risk of stroke, visit a [vascular doctor near you]({clicked_url}).")
 	
 	state = st.selectbox("In which state do you reside?", states)
 	# todo: check state entries compared with model numbers
